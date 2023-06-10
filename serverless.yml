@@ -24,6 +24,7 @@ provider:
   name: aws
   runtime: python3.10
 
+
 # you can overwrite defaults here
 #  stage: dev
   region: eu-central-1
@@ -53,12 +54,10 @@ provider:
 #    variable1: value1
 
 # you can add packaging information here
-#package:
-#  patterns:
-#    - '!exclude-me.py'
-#    - '!exclude-me-dir/**'
-#    - include-me.py
-#    - include-me-dir/**
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
 
 plugins:
   - serverless-python-requirements
