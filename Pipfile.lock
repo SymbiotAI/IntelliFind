@@ -1,6 +1,7 @@
 {
     "_meta": {
         "hash": {
+
             "sha256": "6052e00326505105fd945b04ed6318f8cacdf4a04ca2cce1ea0de5615e8fd26e"
         },
         "pipfile-spec": 6,
@@ -16,6 +17,7 @@
         ]
     },
     "default": {
+
         "aiohttp": {
             "hashes": [
                 "sha256:03543dcf98a6619254b409be2d22b51f21ec66272be4ebda7b04e6412e4b2e14",
