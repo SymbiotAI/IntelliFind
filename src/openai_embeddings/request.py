@@ -1,6 +1,9 @@
 import requests
 import json
 import os
+import chromadb
+chroma_client = chromadb.Client()
+collection = chroma_client.create_collection(name="my_collection")
 
 def make_http_call_with_chunking(input_string, model, api_key):
     headers = ""
@@ -46,8 +49,18 @@ def make_http_call_with_chunking(input_string, model, api_key):
     response_data = ''.join(response_chunks)
 
     # Save the response as JSON
-    json_data = json.loads(response_data)
-    with open("response.json", "w") as file:
-        json.dump(json_data, file)
+    return json.loads(response_data)
 
-    print("Response saved as response.json")
+key = os.environ.get('EMBDEDDINGS_OPENAI_API_KEY')
+data = "This is a large string..."
+response = make_http_call_with_chunking(data, "text-embedding-ada-002", key)
+collection.add(
+    response.data
+)
+results = collection.query(
+    query_texts=["large"],
+    n_results=2
+)
+
+
+print("DATA: " + results)
