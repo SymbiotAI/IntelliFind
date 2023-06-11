@@ -69,6 +69,7 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.send_header("Content-Length", str(length))
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         if f:
             self.copyfile(f, self.wfile)
