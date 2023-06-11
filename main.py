@@ -268,11 +268,10 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 persist_directory = "db"
 #doing some AI magic, idk to store files in a magical database
 def indexText(filename):
-    with open(filename) as f:
-        lines = f.readlines()
+
 
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=500)
-    doc = Document(page_content=(os.linesep).join(lines))
+    doc = Document(filename=filename)
     docs = text_splitter.split_documents([doc])
     embeddings = OpenAIEmbeddings()
     db = Chroma.from_documents(
