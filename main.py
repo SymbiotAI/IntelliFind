@@ -36,39 +36,32 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
         """Serve a GET request."""
-
         web_dir = self.path
         web_dir = web_dir.split("?")[0][1:]
         #print(web_dir)
         if web_dir.__eq__("search"):
+            self.send_response_only(200)
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Access-Control-Allow-Headers",
+                             "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent")
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
             i = self.path.index("?") + 1
             params = dict([tuple(p.split("=")) for p in self.path[i:].split("&")])
             #print(params.get('text'))
             response = search(params.get('text'))
             array_json = []
-
             for doc in response:
                 doc_dict = vars(doc)
                 json_string = json.dumps(doc_dict)
                 array_json.append(json_string)
             return_string = "[" + ', '.join(array_json) + "]"
             print(return_string)
-
-
             f = BytesIO()
             f.write(bytes(return_string, 'utf-8'))
-            self.copyfile(f, self.wfile)
-            length = f.tell()
             f.seek(0)
+            self.copyfile(f, self.wfile)
             f.close()
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Access-Control-Allow-Headers",
-                             "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent")
-            self.send_header("Content-type", "application/json")
-            self.send_header("Content-Length", str(length))
-            self.end_headers()
-            #self.send_json()
-            self.send_response(200)
         else:
             self.send_header("Access-Control-Allow-Origin", "*")
             self.send_header("Access-Control-Allow-Headers",
