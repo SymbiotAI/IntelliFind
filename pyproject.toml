@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "deepindex"
+version = "0.1.0"
+description = ""
+authors = ["Max Levitskiy <max.dstu@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+chromadb = "^0.3.26"
+langchain = "^0.0.196"
+openai = "^0.27.8"
+tiktoken = "^0.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
