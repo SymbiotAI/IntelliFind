@@ -76,34 +76,26 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_POST(self):
         """Serve a POST request."""
-        r, info = self.deal_post_data()
-        print((r, info, "by: ", self.client_address))
-        f = BytesIO()
-        f.write(b'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
-        f.write(b"<html>\n<title>Upload Result Page</title>\n")
-        f.write(b"<body>\n<h2>Upload Result Page</h2>\n")
-        f.write(b"<hr>\n")
-        if r:
-            f.write(b"<strong>Success:</strong>")
-        else:
-            f.write(b"<strong>Failed:</strong>")
-        f.write(info.encode())
-        f.write(("<br><a href=\"%s\">back</a>" % self.headers['referer']).encode())
-        f.write(b"<hr><small>Powerd By: bones7456, check new version at ")
-        f.write(b"<a href=\"http://li2z.cn/?s=SimpleHTTPServerWithUpload\">")
-        f.write(b"here</a>.</small></body>\n</html>\n")
-        length = f.tell()
-        f.seek(0)
+        web_dir = self.path
+        print(web_dir)
+        index = web_dir.split("/")[1]
+        print(index)
+        if index.__eq__("index"):
+            filename = web_dir.split("/")[2]
+            print(filename)
+            # 1. Import the requests library
+            import requests
+            URL = "https://intellifind.s3.eu-central-1.amazonaws.com/"+filename
+            # 2. download the data behind the URL
+            response = requests.get(URL)
+            # 3. Open the response into a new file called instagram.ico
+            open(filename, "wb").write(response.content)
+            indexText(filename)
         self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.send_header("Content-Length", str(length))
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Headers", "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent")
 
         self.end_headers()
-        if f:
-            self.copyfile(f, self.wfile)
-            f.close()
 
     def deal_post_data(self):
         content_type = self.headers['content-type']
