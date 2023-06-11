@@ -1,0 +1,14 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: public.ecr.aws/c2t0e0b5/intelli-find:latest
+    ports:
+      - "88:8080"
+    volumes:
+      - dbdata:/app/db
+
+volumes:
+  dbdata:

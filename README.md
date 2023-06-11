@@ -16,3 +16,7 @@ $ pip install pdfquery
 docker build -t intellifind:dev .  
 docker run -e OPENAI_API_KEY=$EMBDEDDINGS_OPENAI_API_KEY -v db:/app/db -it -p 88:8080 intellifind:dev
 
+
+# Run docker compose
+`docker compose up` - run with image from ECR
+`docker compose up --build` - build image locally and run
