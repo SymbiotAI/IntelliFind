@@ -115,12 +115,12 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                     preline = preline[0:-1]
                 out.write(preline)
                 out.close()
+                indexText(filename=fn)
                 return (True, "File '%s' upload success!" % fn)
             else:
                 out.write(preline)
                 preline = line
 
-        indexText(filename=fn)
 
         return (False, "Unexpect Ends of data.")
 
