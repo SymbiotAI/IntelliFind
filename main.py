@@ -42,9 +42,8 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         if web_dir.__eq__("search"):
             self.send_response_only(200)
             self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
-            self.send_header("Access-Control-Allow-Headers",
-                             "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent")
+            self.send_header("Access-Control-Allow-Methods", "*")
+            self.send_header("Access-Control-Allow-Headers", "*")
             self.send_header("Content-type", "application/json")
             self.end_headers()
             i = self.path.index("?") + 1
