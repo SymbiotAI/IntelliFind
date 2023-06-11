@@ -5,7 +5,7 @@ from langchain.vectorstores import Chroma
 
 persist_directory = "db"
 def indexText(text):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=60)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=500)
     doc = Document(page_content=text)
     docs = text_splitter.split_documents([doc])
     embeddings = OpenAIEmbeddings()
