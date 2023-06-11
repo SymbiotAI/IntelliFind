@@ -11,6 +11,10 @@ import shutil
 import mimetypes
 import re
 from io import BytesIO
+from langchain.docstore.document import Document
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import Chroma
 # Define the port number to listen on
 PORT = 8080
 
@@ -93,6 +97,7 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         remainbytes -= len(line)
         try:
             out = open(fn, 'wb')
+            indexText(filename=fn)
         except IOError:
             return (False, "Can't create file to write, do you have permission to write?")
 
@@ -259,6 +264,30 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         '.c': 'text/plain',
         '.h': 'text/plain',
         })
+
+persist_directory = "db"
+#doing some AI magic, idk to store files in a magical database
+def indexText(filename):
+    with open(filename) as f:
+        lines = f.readlines()
+
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=500)
+    doc = Document(page_content=(os.linesep).join(lines))
+    docs = text_splitter.split_documents([doc])
+    embeddings = OpenAIEmbeddings()
+    db = Chroma.from_documents(
+        documents=docs,
+        persist_directory=persist_directory,
+        embedding=embeddings)
+    db.persist()
+#doing some AI magic, idk to search files from a magical database
+def search(prompt):
+    embeddings = OpenAIEmbeddings()
+    db = Chroma(persist_directory=persist_directory, embedding_function=embeddings)
+    return db.similarity_search(prompt)
+
+
+
 # Create a TCP/IP socket server
 with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
     print(f"Server listening on port {PORT}")
