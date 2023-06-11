@@ -50,3 +50,17 @@ def make_http_call_with_chunking(input_string, model, api_key):
 
     # Save the response as JSON
     return json.loads(response_data)
+
+key = os.environ.get('EMBDEDDINGS_OPENAI_API_KEY')
+data = "This is a large string..."
+response = make_http_call_with_chunking(data, "text-embedding-ada-002", key)
+collection.add(
+    response.data
+)
+results = collection.query(
+    query_texts=["large"],
+    n_results=2
+)
+
+
+print("DATA: " + results)

@@ -22,7 +22,7 @@ frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: python3.10
+  runtime: nodejs14.x
 
 
 # you can overwrite defaults here
@@ -53,20 +53,14 @@ provider:
 #  environment:
 #    variable1: value1
 
-# you can add packaging information here
-package:
-  exclude:
-    - node_modules/**
-    - venv/**
 
-plugins:
-  - serverless-python-requirements
+
 functions:
   createIndex:
     handler: src/handlers/index/create.handler
     events:
       - http:
-          method: GET
+          method: POST
           path: index
 #          private: true
 #    environment:
