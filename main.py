@@ -4,7 +4,7 @@ from src.openai_embeddings.request import make_http_call_with_chunking
 import json
 import os
 # Define the port number to listen on
-PORT = 8010
+PORT = 8080
 
 # Define the request handler class
 class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
