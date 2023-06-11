@@ -63,10 +63,6 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             self.copyfile(f, self.wfile)
             f.close()
         else:
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Access-Control-Allow-Headers",
-                             "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent")
-            self.end_headers()
             f = self.send_head()
             if f:
                 self.copyfile(f, self.wfile)
@@ -209,6 +205,9 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         fs = os.fstat(f.fileno())
         self.send_header("Content-Length", str(fs[6]))
         self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Headers",
+                         "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent")
         self.end_headers()
         return f
 
