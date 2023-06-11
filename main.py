@@ -70,6 +70,8 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.send_header("Content-Length", str(length))
         self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent")
+
         self.end_headers()
         if f:
             self.copyfile(f, self.wfile)
