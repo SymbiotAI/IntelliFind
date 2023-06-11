@@ -61,15 +61,14 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             length = f.tell()
             f.seek(0)
             f.close()
-            self.send_response(200)
             self.send_header("Access-Control-Allow-Origin", "*")
             self.send_header("Access-Control-Allow-Headers",
                              "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent")
             self.send_header("Content-type", "application/json")
             self.send_header("Content-Length", str(length))
             self.end_headers()
-            self.send_head()
-            self.send_response(code=200)
+            #self.send_json()
+            self.send_response(200)
         else:
             self.send_header("Access-Control-Allow-Origin", "*")
             self.send_header("Access-Control-Allow-Headers",
@@ -162,6 +161,22 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
 
         return (False, "Unexpect Ends of data.")
+
+    def send_json(self):
+        """Common code for GET and HEAD commands.
+        """
+        path = self.translate_path(self.path)
+        f = None
+        ctype = "application/json"
+        self.send_response(200)
+        self.send_header("Content-type", ctype)
+        fs = os.fstat(f.fileno())
+        self.send_header("Content-Length", str(fs[6]))
+        self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
+        self.end_headers()
+        return f
+
+
 
     def send_head(self):
         """Common code for GET and HEAD commands.
