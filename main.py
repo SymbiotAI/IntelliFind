@@ -15,6 +15,7 @@ from langchain.docstore.document import Document
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
+from langchain.document_loaders import PyPDFLoader
 # Define the port number to listen on
 PORT = 8080
 
@@ -100,7 +101,6 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         remainbytes -= len(line)
         try:
             out = open(fn, 'wb')
-            indexText(filename=fn)
         except IOError:
             return (False, "Can't create file to write, do you have permission to write?")
 
@@ -119,6 +119,9 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 out.write(preline)
                 preline = line
+
+        indexText(filename=fn)
+
         return (False, "Unexpect Ends of data.")
 
     def send_head(self):
@@ -271,11 +274,10 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 persist_directory = "db"
 #doing some AI magic, idk to store files in a magical database
 def indexText(filename):
-
-
+    loader = PyPDFLoader(filename)
+    pages = loader.load_and_split()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=500)
-    doc = Document(filename=filename)
-    docs = text_splitter.split_documents([doc])
+    docs = text_splitter.split_documents(pages)
     embeddings = OpenAIEmbeddings()
     db = Chroma.from_documents(
         documents=docs,
